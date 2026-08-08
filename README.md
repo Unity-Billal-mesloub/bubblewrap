@@ -12,23 +12,14 @@ on the host.
 User namespaces
 ---------------
 
-There is an effort in the Linux kernel called
+There is a feature in the Linux kernel called
 [user namespaces](https://www.google.com/search?q=user+namespaces+site%3Ahttps%3A%2F%2Flwn.net)
-which attempts to allow unprivileged users to use container features.
-While significant progress has been made, there are
-[still concerns](https://lwn.net/Articles/673597/) about it, and
-it is not available to unprivileged users in several production distributions
-such as CentOS/Red Hat Enterprise Linux 7, Debian Jessie, etc.
+which allows unprivileged users to use container features. Bubblewrap uses these to
+build the sandbox, allowing any user to use the tool.
 
-See for example
-[CVE-2016-3135](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-3135)
-which is a local root vulnerability introduced by userns.
-[This March 2016 post](https://lkml.org/lkml/2016/3/9/555) has some
-more discussion.
-
-Bubblewrap could be viewed as setuid implementation of a *subset* of
-user namespaces.  Emphasis on subset - specifically relevant to the
-above CVE, bubblewrap does not allow control over iptables.
+Historically, bubblewrap also supported a setuid mode for systems where
+unprivileged user namespaces were not supported. However, this has been
+removed.
 
 The original bubblewrap code existed before user namespaces - it inherits code from
 [xdg-app helper](https://cgit.freedesktop.org/xdg-app/xdg-app/tree/common/xdg-app-helper.c?id=4c3bf179e2e4a2a298cd1db1d045adaf3f564532)

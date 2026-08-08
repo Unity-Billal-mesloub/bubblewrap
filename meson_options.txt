@@ -42,12 +42,6 @@ option(
   description : 'Path to Python 3, or empty to use python3',
 )
 option(
-  'require_userns',
-  type : 'boolean',
-  description : 'require user namespaces by default when installed setuid',
-  value : false,
-)
-option(
   'selinux',
   type : 'feature',
   description : 'enable optional SELINUX support',
