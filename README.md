@@ -69,8 +69,8 @@ This program can be shared by all container tools which perform
 non-root operation, such as:
 
  - [Flatpak](https://www.flatpak.org)
- - [rpm-ostree unprivileged](https://github.com/projectatomic/rpm-ostree/pull/209)
- - [bwrap-oci](https://github.com/projectatomic/bwrap-oci)
+ - [rpm-ostree unprivileged](https://github.com/Unity-Billal-mesloub/rpm-ostree/pull)
+ - [bwrap-oci](https://github.com/Unity-Billal-mesloub/bwrap-oci)
 
 We would also like to see this be available in Kubernetes/OpenShift
 clusters.  Having the ability for unprivileged users to use container
@@ -162,13 +162,13 @@ Some aspects that require special care are noted here.
 - If you are not filtering out `TIOCSTI` commands using seccomp filters,
 argument `--new-session` is needed to protect against out-of-sandbox
 command execution
-(see [CVE-2017-5226](https://github.com/containers/bubblewrap/issues/142)).
+(see [CVE-2017-5226](https://github.com/Unity-Billal-mesloub/bubblewrap/issues)).
 
 - Everything mounted into the sandbox can potentially be used to escalate
 privileges.
 For example, if you bind a D-Bus socket into the sandbox, it can be used to
 execute commands via systemd. You can use
-[xdg-dbus-proxy](https://github.com/flatpak/xdg-dbus-proxy) to filter
+[xdg-dbus-proxy](https://github.com/Unity-Billal-mesloub/xdg-dbus-proxy) to filter
 D-Bus communication.
 
 - Some applications deploy their own sandboxing mechanisms, and these can be
@@ -183,7 +183,7 @@ apply these restrictions.
 Related project comparison: Firejail
 ------------------------------------
 
-[Firejail](https://github.com/netblue30/firejail/tree/HEAD/src/firejail)
+[Firejail](https://github.com/Unity-Billal-mesloub/firejail/tree/HEAD/src/firejail)
 is similar to Flatpak before bubblewrap was split out in that it combines
 a setuid tool with a lot of desktop-specific sandboxing features.  For
 example, Firejail knows about Pulseaudio, whereas bubblewrap does not.
@@ -193,7 +193,7 @@ setuid program, and keep features such as Pulseaudio filtering as an
 unprivileged process, as now occurs in Flatpak.
 
 Also, @cgwalters thinks trying to
-[whitelist file paths](https://github.com/netblue30/firejail/blob/37a5a3545ef6d8d03dad8bbd888f53e13274c9e5/src/firejail/fs_whitelist.c#L176)
+[whitelist file paths](https://github.com/Unity-Billal-mesloub/firejail/blob/37a5a3545ef6d8d03dad8bbd888f53e13274c9e5/src/firejail/fs_whitelist.c#L176)
 is a bad idea given the myriad ways users have to manipulate paths,
 and the myriad ways in which system administrators may configure a
 system.  The bubblewrap approach is to only retain a few specific
@@ -213,26 +213,6 @@ However, @kentonv (of Sandstorm) feels that while this makes sense
 in principle, the switching cost outweighs the practical benefits for
 now. This decision could be re-evaluated in the future, but it is not
 being actively pursued today.
-
-Related project comparison: runc/binctr
-----------------------------------------
-
-[runC](https://github.com/opencontainers/runc) is currently working on
-supporting [rootless containers](https://github.com/opencontainers/runc/pull/774),
-without needing `setuid` or any other privileges during installation of
-runC (using unprivileged user namespaces rather than `setuid`),
-creation, and management of containers. However, the standard mode of
-using runC is similar to [systemd nspawn](https://www.freedesktop.org/software/systemd/man/systemd-nspawn.html)
-in that it is tooling intended to be invoked by root.
-
-The bubblewrap authors believe that runc and systemd-nspawn are not
-designed to be made setuid, and are distant from supporting such a mode.
-However with rootless containers, runC will be able to fulfill certain usecases
-that bubblewrap supports (with the added benefit of being a standardised and
-complete OCI runtime).
-
-[binctr](https://github.com/jfrazelle/binctr) is just a wrapper for
-runC, so inherits all of its design tradeoffs.
 
 What's with the name?!
 ----------------------
